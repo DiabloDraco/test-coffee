@@ -14,8 +14,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Auth } from 'src/commons/decorators/auth.decorator';
 import { PagePipe } from 'src/commons/pipes/PagePipe';
 import { PerPagePipe } from 'src/commons/pipes/PerPagePipe';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@Auth()
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -25,6 +26,8 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @ApiBearerAuth()
+  @Auth()
   @Get()
   findAll(
     @Query('page', PagePipe) page: number,
@@ -39,6 +42,8 @@ export class UsersController {
     });
   }
 
+  @ApiBearerAuth()
+  @Auth()
   @Get(':id')
   findByID(
     @Param('id', ParseIntPipe)
@@ -54,6 +59,8 @@ export class UsersController {
     });
   }
 
+  @ApiBearerAuth()
+  @Auth()
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,

@@ -4,7 +4,9 @@ import { AuthDto } from './dto/auth.dto';
 import { User as AuthUser } from 'src/commons/user/entities/user.entity';
 import { User } from 'src/commons/decorators/user.decorator';
 import { Auth } from 'src/commons/decorators/auth.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -15,6 +17,7 @@ export class AuthController {
     return this.authService.signIn(authDto);
   }
 
+  @ApiBearerAuth()
   @Auth()
   @Post('me')
   @HttpCode(200)

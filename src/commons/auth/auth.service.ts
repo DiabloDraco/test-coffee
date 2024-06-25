@@ -13,6 +13,8 @@ export class AuthService {
   ) {}
 
   async signIn(authDto: AuthDto) {
+    console.log(authDto);
+
     const user = await this.userService.findOne({
       where: {
         login: authDto.login,
@@ -22,6 +24,7 @@ export class AuthService {
         roles: true,
       },
     });
+    console.log(user);
 
     this.userService.updateOne(user.id);
 
