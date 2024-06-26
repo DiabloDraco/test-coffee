@@ -14,14 +14,10 @@ export class ProductService {
 
   async create(createProductDto: CreateProductDto) {
     try {
-      console.log(this.productsRepository.create(createProductDto));
-
       return await this.productsRepository.save(
         this.productsRepository.create(createProductDto),
       );
     } catch (error) {
-      console.log(error);
-
       throw new BadRequestException();
     }
   }

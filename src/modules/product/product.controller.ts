@@ -7,14 +7,23 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PagePipe } from 'src/commons/pipes/PagePipe';
 import { PerPagePipe } from 'src/commons/pipes/PerPagePipe';
 import { Auth } from 'src/commons/decorators/auth.decorator';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('products')
 @Controller('product')
@@ -24,7 +33,15 @@ export class ProductController {
   @ApiBearerAuth()
   @Auth()
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateProductDto })
+  @UseInterceptors(FilesInterceptor('photos', 10, { dest: 'uploads' }))
+  create(
+    @Body() createProductDto: CreateProductDto,
+    @UploadedFiles() photos: Express.Multer.File[],
+  ) {
+    console.log(photos, 'files', createProductDto);
+    createProductDto.photos = photos.map((item) => item.filename);
     return this.productService.create(createProductDto);
   }
 

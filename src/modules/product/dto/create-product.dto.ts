@@ -27,9 +27,17 @@ export class CreateProductDto {
 
   @ApiProperty({
     description: 'categories of Product',
-    type: Category,
+    type: String,
   })
   @IsNotEmpty()
   @Type(() => Category)
   category: Category;
+
+  @ApiProperty({
+    description: 'Photos of product',
+    type: 'string',
+    format: 'binary',
+    isArray: true,
+  })
+  photos: string[];
 }

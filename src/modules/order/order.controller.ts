@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/commons/decorators/auth.decorator';
+import { PagePipe } from 'src/commons/pipes/PagePipe';
+import { PerPagePipe } from 'src/commons/pipes/PerPagePipe';
+import { OrderDetail } from '../order-details/entities/order-detail.entity';
 
 @ApiTags('orders')
 @Controller('order')
@@ -21,13 +25,22 @@ export class OrderController {
   @ApiBearerAuth()
   @Auth()
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  create(@Body() body: any) {
+    return this.orderService.create(body.user_id, body.details);
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  findAll(
+    @Query('page', PagePipe) page: number,
+    @Query('per_page', PerPagePipe) perPage: number,
+  ) {
+    return this.orderService.findAll({
+      skip: perPage * page,
+      take: perPage,
+      order: {
+        id: 'DESC',
+      },
+    });
   }
 
   @Get(':id')

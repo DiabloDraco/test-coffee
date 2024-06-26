@@ -27,4 +27,7 @@ export class Product {
     referencedColumnName: 'id',
   })
   category: Category;
+
+  @Column('simple-json', { default: '' })
+  photos: string[];
 }

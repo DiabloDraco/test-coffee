@@ -14,6 +14,8 @@ import { CategoryModule } from './modules/category/category.module';
 import { Category } from './modules/category/entities/category.entity';
 import { Order } from './modules/order/entities/order.entity';
 import { Product } from './modules/product/entities/product.entity';
+import { OrderDetailsModule } from './modules/order-details/order-details.module';
+import { OrderDetail } from './modules/order-details/entities/order-detail.entity';
 
 type Type = 'postgres';
 
@@ -23,9 +25,6 @@ type Type = 'postgres';
       envFilePath: `${process.env.NODE_ENV}`,
       isGlobal: true,
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-    }),
     TypeOrmModule.forRoot({
       type: process.env.DB_TYPE as Type,
       host: process.env.DB_HOST,
@@ -33,7 +32,7 @@ type Type = 'postgres';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Role, Category, Order, Product],
+      entities: [User, Role, Category, Order, Product, OrderDetail],
       synchronize: true,
       poolSize: 20,
       useUTC: true,
@@ -44,6 +43,7 @@ type Type = 'postgres';
     OrderModule,
     ProductModule,
     CategoryModule,
+    OrderDetailsModule,
   ],
   controllers: [],
   providers: [],
