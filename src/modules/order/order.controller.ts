@@ -11,11 +11,10 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/commons/decorators/auth.decorator';
 import { PagePipe } from 'src/commons/pipes/PagePipe';
 import { PerPagePipe } from 'src/commons/pipes/PerPagePipe';
-import { OrderDetail } from '../order-details/entities/order-detail.entity';
 
 @ApiTags('orders')
 @Controller('order')
@@ -23,6 +22,24 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @ApiBearerAuth()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        user_id: { type: 'string', example: '123456' },
+        details: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              product: { type: 'string', example: '1' },
+              count: { type: 'number', example: 2 },
+            },
+          },
+        },
+      },
+    },
+  })
   @Auth()
   @Post()
   create(@Body() body: any) {
